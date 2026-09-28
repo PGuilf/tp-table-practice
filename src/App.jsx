@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { companies } from './data.js'
 import { colors, spacing, radius, fontSize } from './tokens.js'
 
@@ -55,6 +56,9 @@ function MarginBadge({ value }) {
 
 const col = {
   th: {
+    position: 'sticky',
+    top: 0,
+    zIndex: 1,
     padding: `${spacing.sm} ${spacing.md}`,
     textAlign: 'left',
     fontSize: fontSize.xs,
@@ -76,6 +80,8 @@ const col = {
 }
 
 export default function App() {
+  const [hoveredId, setHoveredId] = useState(null)
+
   return (
     <div
       className="page"
@@ -118,6 +124,8 @@ export default function App() {
             borderRadius: radius.lg,
             border: `1px solid ${colors.border}`,
             boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+            maxHeight: '480px',
+            overflowY: 'auto',
           }}
         >
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -135,13 +143,12 @@ export default function App() {
               {companies.map((c, i) => (
                 <tr
                   key={c.id}
-                  style={{ transition: 'background 0.1s' }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor = colors.primaryLight)
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor = 'transparent')
-                  }
+                  style={{
+                    transition: 'background 0.1s',
+                    backgroundColor: hoveredId === c.id ? colors.primaryLight : 'transparent',
+                  }}
+                  onMouseEnter={() => setHoveredId(c.id)}
+                  onMouseLeave={() => setHoveredId(null)}
                 >
                   <td
                     style={{
@@ -160,6 +167,7 @@ export default function App() {
                     </span>
                   </td>
                   <td style={{ ...col.td, color: colors.textMuted }}>
+                    <span style={{ marginRight: spacing.xs }}>{c.flag}</span>
                     {c.country}
                   </td>
                   <td style={{ ...col.td, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>
@@ -168,8 +176,24 @@ export default function App() {
                   <td style={{ ...col.td, textAlign: 'right' }}>
                     <MarginBadge value={c.margin} />
                   </td>
-                  <td style={col.td}>
-                    <StatusBadge value={c.margin} />
+                  <td style={{ ...col.td, position: 'relative' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: spacing.sm }}>
+                      <StatusBadge value={c.margin} />
+                      {hoveredId === c.id && (
+                        <img
+                          src={c.image}
+                          alt={c.name}
+                          width={40}
+                          height={40}
+                          style={{
+                            borderRadius: radius.sm,
+                            display: 'block',
+                            objectFit: 'cover',
+                            border: `1px solid ${colors.border}`,
+                          }}
+                        />
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
