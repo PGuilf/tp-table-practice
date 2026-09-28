@@ -19,6 +19,8 @@ export const colors = {
   positiveBg: '#dcfce7',
   negativeBg: '#fee2e2',
   negativeText: '#991b1b',
+  warningText: '#92400e',
+  warningBg: '#fef3c7',
 }
 
 export const spacing = {

@@ -13,6 +13,26 @@ const fmt = {
   margin: (v) => `${v > 0 ? '+' : ''}${v.toFixed(1)}%`,
 }
 
+function StatusBadge({ value }) {
+  const inRange = value >= 3 && value <= 7
+  return (
+    <span
+      style={{
+        display: 'inline-block',
+        padding: `${spacing.xs} ${spacing.sm}`,
+        borderRadius: radius.sm,
+        fontSize: fontSize.xs,
+        fontWeight: 600,
+        letterSpacing: '0.02em',
+        backgroundColor: inRange ? colors.positiveBg : colors.negativeBg,
+        color: inRange ? colors.positiveText : colors.negativeText,
+      }}
+    >
+      {inRange ? 'In range' : 'Review'}
+    </span>
+  )
+}
+
 function MarginBadge({ value }) {
   const positive = value >= 0
   return (
@@ -58,10 +78,9 @@ const col = {
 export default function App() {
   return (
     <div
+      className="page"
       style={{
-        minHeight: '100vh',
         backgroundColor: colors.bgPage,
-        padding: spacing.xxl,
         fontFamily:
           "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       }}
@@ -72,7 +91,7 @@ export default function App() {
           <h1
             style={{
               margin: 0,
-              fontSize: fontSize.xxl,
+              fontSize: '56px',
               fontWeight: 700,
               color: colors.textHeading,
               letterSpacing: '-0.02em',
@@ -93,11 +112,11 @@ export default function App() {
 
         {/* Card */}
         <div
+          className="table-card"
           style={{
             backgroundColor: colors.bgCard,
             borderRadius: radius.lg,
             border: `1px solid ${colors.border}`,
-            overflow: 'hidden',
             boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
           }}
         >
@@ -109,6 +128,7 @@ export default function App() {
                 <th style={col.th}>Country</th>
                 <th style={{ ...col.th, textAlign: 'right' }}>Revenue</th>
                 <th style={{ ...col.th, textAlign: 'right' }}>Op. Margin</th>
+                <th style={col.th}>Status</th>
               </tr>
             </thead>
             <tbody>
@@ -147,6 +167,9 @@ export default function App() {
                   </td>
                   <td style={{ ...col.td, textAlign: 'right' }}>
                     <MarginBadge value={c.margin} />
+                  </td>
+                  <td style={col.td}>
+                    <StatusBadge value={c.margin} />
                   </td>
                 </tr>
               ))}
